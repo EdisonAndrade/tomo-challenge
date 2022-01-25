@@ -23,3 +23,40 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    pdo_connection:
+        class: PDO
+        public: true
+        arguments:
+            - 'mysql:host=localhost;port=3306;dbname=tomo;charset=utf8;'
+            - 'root'
+            - 'super_secret_password'
+            -
+                !php/const \PDO::ATTR_ERRMODE: !php/const \PDO::ERRMODE_EXCEPTION
+                !php/const \PDO::ATTR_PERSISTENT: true
+
+    train_controller:
+        class: App\Controller\ScheduleController
+        public: true
+        arguments:
+            - '@schedule_service'
+            - '@serializer'
+    schedule_repository:
+        class: App\Controller\Model\Repository\ScheduleRepository
+        public: true
+        arguments:
+            - '@pdo_connection'
+
+    train_repository:
+        class: App\Controller\Model\TrainRepository
+        alias:
+        public: true
+        arguments:
+            - '@pdo_connection'
+
+    schedule_service:
+        class: App\Service\ScheduleService
+        public: true
+        arguments:
+            - '@schedule_repository'
+            - '@train_repository'
