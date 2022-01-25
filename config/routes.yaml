@@ -1,3 +1,18 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+train.add_train:
+  path: /v1/trains
+  methods: [POST]
+  defaults: { _controller: train_controller:addTrain }
+
+train.get_next:
+  path: /v1/trains/next
+  methods: [GET]
+  defaults: { _controller: train_controller:getNext }
+
+train.get_schedule:
+  path: /v1/trains/{trainId}
+  methods: [GET]
+  defaults: { _controller: train_controller:getSchedule }
